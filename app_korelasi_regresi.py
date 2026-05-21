@@ -1,22 +1,22 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
-from scipy.stats import pearsonr, spearmanr
+from scipy.stats import pearsonr,spearmanr
 import matplotlib.pyplot as plt
 
-# =============================
+# ========================
 # KONFIGURASI
-# =============================
+# ========================
 
 st.set_page_config(
-    page_title="Korelasi Regresi",
-    page_icon="📊",
-    layout="wide"
+page_title="Korelasi Regresi",
+page_icon="📊",
+layout="wide"
 )
 
-# =============================
-# CSS CUSTOM
-# =============================
+# ========================
+# CSS
+# ========================
 
 st.markdown("""
 <style>
@@ -32,9 +32,13 @@ linear-gradient(
 }
 
 h1{
+
 text-align:center;
+
 color:white;
-font-size:42px;
+
+font-size:40px;
+
 }
 
 .block-container{
@@ -48,16 +52,7 @@ border-radius:30px;
 
 box-shadow:
 0px 8px 32px
-rgba(0,0,0,0.4);
-
-}
-
-.stTextArea textarea,
-.stNumberInput input{
-
-border-radius:15px;
-
-border:2px solid #60a5fa;
+rgba(0,0,0,0.3);
 
 }
 
@@ -67,98 +62,193 @@ width:100%;
 
 height:55px;
 
-font-size:18px;
+border-radius:20px;
 
 font-weight:bold;
 
-border-radius:20px;
-
-transition:0.3s;
+font-size:18px;
 
 }
 
 .stButton button:hover{
 
-transform:scale(1.02);
+transform:scale(1.03);
 
-}
-
-[data-testid="stFileUploader"]{
-
-border:2px dashed #60a5fa;
-
-padding:15px;
-
-border-radius:20px;
-
-}
-
-div[data-testid="metric-container"]{
-
-background:#111827;
-
-padding:15px;
-
-border-radius:20px;
+transition:0.3s;
 
 }
 
 </style>
+
 """,unsafe_allow_html=True)
 
-# =============================
+# ========================
+# SIDEBAR
+# ========================
+
+with st.sidebar:
+
+    st.image(
+    "logo_teknokrat.png",
+    width=180
+    )
+
+    st.title(
+    "Universitas Teknokrat Indonesia"
+    )
+
+    st.markdown("---")
+
+    st.subheader(
+    "Kelompok"
+    )
+
+    st.write(
+    "M. ILHAM PRATAMA AZIZ"
+    )
+
+    st.write(
+    "FARHAN GUNARSO"
+    )
+
+    st.write(
+    "GIAN GABRIEL BAGITU"
+    )
+
+    st.write(
+    "SAFEL RISKI RAMADHAN"
+    )
+
+    st.write(
+    "REIHAN ADI PERMANA"
+    )
+
+    st.markdown("---")
+
+    menu=st.selectbox(
+
+    "Pilih Menu",
+
+    [
+
+    "Analisis",
+
+    "Tentang"
+
+    ]
+
+    )
+
+# ========================
+# HALAMAN TENTANG
+# ========================
+
+if menu=="Tentang":
+
+    st.title(
+    "Tentang Aplikasi"
+    )
+
+    st.write("""
+
+Aplikasi ini dibuat
+untuk:
+
+✔ Analisis Korelasi Pearson
+
+✔ Korelasi Spearman
+
+✔ Regresi Linear
+
+✔ Prediksi Data
+
+✔ Statistik
+
+Dibangun menggunakan:
+
+Python
+
+Streamlit
+
+Matplotlib
+
+Scipy
+
+Pandas
+
+""")
+
+    st.stop()
+
+# ========================
+# SESSION
+# ========================
+
+if "hasil" not in st.session_state:
+
+    st.session_state.hasil=None
+
+if "a" not in st.session_state:
+
+    st.session_state.a=None
+
+if "b" not in st.session_state:
+
+    st.session_state.b=None
+
+# ========================
 # JUDUL
-# =============================
+# ========================
 
 st.markdown("""
+
 <h1>
+
 📊 Aplikasi Korelasi & Regresi
+
 </h1>
+
 """,unsafe_allow_html=True)
 
 st.markdown("---")
 
-# =============================
-# SESSION
-# =============================
-
-if "hasil" not in st.session_state:
-    st.session_state.hasil=None
-
-if "a" not in st.session_state:
-    st.session_state.a=None
-
-if "b" not in st.session_state:
-    st.session_state.b=None
-
-# =============================
+# ========================
 # INPUT
-# =============================
+# ========================
 
 kiri,kanan=st.columns(2)
 
 with kiri:
 
     x_input=st.text_area(
+
     "Masukkan Data X",
+
     "10,20,30,40,50"
+
     )
 
 with kanan:
 
     y_input=st.text_area(
+
     "Masukkan Data Y",
+
     "15,25,35,45,55"
+
     )
 
 uploaded=st.file_uploader(
+
 "Upload CSV / Excel",
+
 type=["csv","xlsx"]
+
 )
 
-# =============================
-# BACA DATA
-# =============================
+# ========================
+# AMBIL DATA
+# ========================
 
 try:
 
@@ -184,10 +274,6 @@ try:
         df.iloc[:,1]
         )
 
-        st.success(
-        "Data berhasil diimport"
-        )
-
     else:
 
         x=np.array(
@@ -211,152 +297,89 @@ try:
 except:
 
     st.error(
-    "Format data salah"
+    "Format Salah"
     )
 
     st.stop()
 
-# =============================
+# ========================
 # HITUNG
-# =============================
+# ========================
 
 if st.button(
 "HITUNG ANALISIS"
 ):
 
-    pearson,_=pearsonr(
-    x,y
-    )
+    with st.spinner(
+    "Menghitung..."
+    ):
 
-    spearman,_=spearmanr(
-    x,y
-    )
+        pearson,_=pearsonr(
+        x,y
+        )
 
-    b,a=np.polyfit(
-    x,
-    y,
-    1
-    )
+        spearman,_=spearmanr(
+        x,y
+        )
 
-    st.session_state.a=a
-    st.session_state.b=b
+        b,a=np.polyfit(
+        x,
+        y,
+        1
+        )
 
-    prediksi=a+b*x
+        st.session_state.a=a
+        st.session_state.b=b
 
-    ss_total=np.sum(
-    (y-np.mean(y))**2
-    )
+        prediksi=a+b*x
 
-    ss_res=np.sum(
-    (y-prediksi)**2
-    )
+        r2=np.corrcoef(
+        x,
+        y
+        )[0,1]**2
 
-    r2=1-(ss_res/ss_total)
+        st.session_state.hasil={
 
-    hasil={
+        "pearson":pearson,
 
-    "pearson":pearson,
+        "spearman":spearman,
 
-    "spearman":spearman,
+        "r2":r2,
 
-    "r2":r2,
+        "x":x,
 
-    "meanx":np.mean(x),
+        "y":y,
 
-    "meany":np.mean(y),
+        "prediksi":prediksi
 
-    "medianx":np.median(x),
+        }
 
-    "mediany":np.median(y),
-
-    "stdx":np.std(x),
-
-    "stdy":np.std(y),
-
-    "x":x,
-
-    "y":y,
-
-    "prediksi":prediksi
-
-    }
-
-    st.session_state.hasil=hasil
-
-# =============================
-# TAMPILKAN
-# =============================
+# ========================
+# HASIL
+# ========================
 
 if st.session_state.hasil:
 
     h=st.session_state.hasil
 
-    st.subheader(
-    "Hasil Analisis"
-    )
+    a,b,c=st.columns(3)
 
-    c1,c2,c3=st.columns(3)
-
-    c1.metric(
+    a.metric(
     "Pearson",
     f"{h['pearson']:.4f}"
     )
 
-    c2.metric(
+    b.metric(
     "Spearman",
     f"{h['spearman']:.4f}"
     )
 
-    c3.metric(
+    c.metric(
     "R²",
     f"{h['r2']:.4f}"
     )
 
-    st.markdown("---")
-
-    a1,a2,a3=st.columns(3)
-
-    a1.metric(
-    "Mean X",
-    f"{h['meanx']:.2f}"
-    )
-
-    a2.metric(
-    "Mean Y",
-    f"{h['meany']:.2f}"
-    )
-
-    a3.metric(
-    "Median X",
-    f"{h['medianx']:.2f}"
-    )
-
-    b1,b2,b3=st.columns(3)
-
-    b1.metric(
-    "Median Y",
-    f"{h['mediany']:.2f}"
-    )
-
-    b2.metric(
-    "Std X",
-    f"{h['stdx']:.2f}"
-    )
-
-    b3.metric(
-    "Std Y",
-    f"{h['stdy']:.2f}"
-    )
-
-    st.markdown("---")
-
-    st.subheader(
-    "Grafik Korelasi & Regresi"
-    )
-
-    fig,ax=plt.subplots(
-    figsize=(10,5)
-    )
+    fig,ax=plt.subplots()
 
     ax.scatter(
     h["x"],
@@ -369,35 +392,22 @@ if st.session_state.hasil:
     linewidth=3
     )
 
-    ax.set_xlabel(
-    "X"
-    )
-
-    ax.set_ylabel(
-    "Y"
-    )
-
     ax.grid()
 
-    st.pyplot(
-    fig
-    )
+    st.pyplot(fig)
 
-# =============================
+# ========================
 # PREDIKSI
-# =============================
+# ========================
 
-if st.session_state.a is not None:
-
-    st.markdown("---")
+if st.session_state.a!=None:
 
     st.subheader(
-    "Prediksi Nilai"
+    "Prediksi"
     )
 
     nilai=st.number_input(
-    "Masukkan X Prediksi",
-    value=0.0
+    "Masukkan X Prediksi"
     )
 
     if st.button(
@@ -410,5 +420,21 @@ if st.session_state.a is not None:
         )
 
         st.success(
-        f"Prediksi Y = {hasil:.2f}"
+        f"Hasil Prediksi Y = {hasil:.2f}"
         )
+
+st.markdown("---")
+
+st.markdown("""
+
+<div style='text-align:center'>
+
+Dibuat Oleh Kelompok
+
+Universitas Teknokrat Indonesia
+
+2026
+
+</div>
+
+""",unsafe_allow_html=True)
